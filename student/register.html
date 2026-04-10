@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Thesis Coordination System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Student Registration</h2>
+            
+            <form id="registerForm">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentId">Student ID *</label>
+                        <input type="text" id="studentId" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="department">Department *</label>
+                        <select id="department" required>
+                            <option value="">Select Department</option>
+                            <option value="CSE">Computer Science & Engineering</option>
+                            <option value="EEE">Electrical & Electronic Engineering</option>
+                            <option value="CE">Civil Engineering</option>
+                            <option value="ME">Mechanical Engineering</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="semester">Semester *</label>
+                        <select id="semester" required>
+                            <option value="">Select Semester</option>
+                            <option value="8">8th Semester</option>
+                            <option value="7">7th Semester</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="cgpa">CGPA *</label>
+                        <input type="number" id="cgpa" step="0.01" min="0" max="4" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="completedCredits">Completed Credits *</label>
+                        <input type="number" id="completedCredits" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+                
+                <p style="text-align: center; margin-top: 1rem;">
+                    Already have an account? <a href="login.html">Login here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+</body>
+</html>

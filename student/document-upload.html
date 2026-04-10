@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Upload - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Upload Form */
+        .upload-form {
+            height: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.95rem;
+        }
+
+        .form-label.required:after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+            color: #000000;
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .file-input-container {
+            position: relative;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+
+        .file-input::file-selector-button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-right: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .file-input::file-selector-button:hover {
+            background: var(--accent);
+        }
+
+        .file-info {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: #000000;
+            opacity: 0.8;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--light);
+        }
+
+        .data-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: #000000;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: #000000;
+            vertical-align: middle;
+            opacity: 0.9;
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .badge-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .badge-approved {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .badge-rejected {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .badge-under-review {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        /* File Icons */
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .file-info-cell {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        /* File Size */
+        .file-size {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.8;
+        }
+
+        /* Date */
+        .date-cell {
+            white-space: nowrap;
+            color: #000000;
+            opacity: 0.8;
+        }
+
+        /* Feedback */
+        .feedback-cell {
+            max-width: 200px;
+        }
+
+        .feedback-text {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.8;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Progress Bar */
+        .upload-progress {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .file-info-cell {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .file-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Document Guidelines */
+        .guidelines {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .guidelines-title {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guidelines-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #000000;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .guidelines-list li:before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-formation.html">Team Formation</a></li>
+                <li><a href="supervisor-selection.html">Supervisors</a></li>
+                <li><a href="annex-form.html">Annex Form</a></li>
+                <li><a href="document-upload.html" class="active">Documents</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="defense-schedule.html">Defense</a></li>
+                <li><a href="results.html">Results</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Document Upload</h1>
+            <div class="page-subtitle">Upload and manage your thesis documents</div>
+        </div>
+        
+        <div class="grid-2">
+            <!-- Upload Form -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upload New Document</div>
+                </div>
+                <div class="card-content">
+                    <form id="uploadForm" class="upload-form">
+                        <div class="form-group">
+                            <label for="documentType" class="form-label required">Document Type</label>
+                            <select id="documentType" class="form-select" required>
+                                <option value="">Select Document Type</option>
+                                <option value="proposal">Project Proposal</option>
+                                <option value="midterm">Mid-term Report</option>
+                                <option value="final">Final Report</option>
+                                <option value="presentation">Presentation Slides</option>
+                                <option value="literature-review">Literature Review</option>
+                                <option value="methodology">Methodology Document</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fileInput" class="form-label required">Select File</label>
+                            <div class="file-input-container">
+                                <input type="file" id="fileInput" class="file-input" accept=".pdf,.doc,.docx,.ppt,.pptx" required>
+                            </div>
+                            <div class="file-info">
+                                Accepted formats: PDF, DOC, DOCX, PPT, PPTX<br>
+                                Maximum file size: 10MB
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="upload-progress" id="uploadProgress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0% uploaded</div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <span id="uploadButtonText">Upload Document</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Guidelines -->
+                    <div class="guidelines">
+                        <div class="guidelines-title">Upload Guidelines:</div>
+                        <ul class="guidelines-list">
+                            <li>Ensure documents are properly formatted</li>
+                            <li>Include all team members' names</li>
+                            <li>Remove any personal information not required</li>
+                            <li>Check file size before uploading</li>
+                            <li>Keep a backup copy of all uploaded files</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Document List -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Uploaded Documents</div>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>File</th>
+                                    <th>Size</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentsList">
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="empty-state">
+                                            <div class="empty-state-icon">📄</div>
+                                            <p>No documents uploaded yet</p>
+                                            <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.7;">
+                                                Upload your first document to get started
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">Department of Computer Science & Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/documents.js"></script>
+    <script>
+        // File input preview
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+                const fileName = file.name;
+                
+                // Update file info display
+                const fileInfo = document.querySelector('.file-info');
+                if (fileInfo) {
+                    fileInfo.innerHTML = `
+                        Selected: <strong>${fileName}</strong><br>
+                        Size: ${fileSize} MB<br>
+                        Type: ${file.type || 'Not specified'}
+                    `;
+                }
+                
+                // Validate file size
+                if (file.size > 10 * 1024 * 1024) { // 10MB
+                    alert('File size exceeds 10MB limit. Please select a smaller file.');
+                    e.target.value = '';
+                }
+            }
+        });
+
+        // Form submission with progress simulation
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const documentType = document.getElementById('documentType');
+            
+            // Validate form
+            if (!documentType.value || !fileInput.files.length) {
+                alert('Please select a document type and file.');
+                return;
+            }
+            
+            // Show progress bar
+            const progressBar = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const uploadButton = document.querySelector('#uploadForm button[type="submit"]');
+            const uploadButtonText = document.getElementById('uploadButtonText');
+            
+            progressBar.style.display = 'block';
+            uploadButton.disabled = true;
+            uploadButtonText.textContent = 'Uploading...';
+            
+            // Simulate upload progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Simulate server response delay
+                    setTimeout(() => {
+                        progressBar.style.display = 'none';
+                        uploadButton.disabled = false;
+                        uploadButtonText.textContent = 'Upload Document';
+                        
+                        // Show success message
+                        alert('Document uploaded successfully!');
+                        
+                        // Clear form
+                        document.getElementById('uploadForm').reset();
+                        document.querySelector('.file-info').innerHTML = 
+                            'Accepted formats: PDF, DOC, DOCX, PPT, PPTX<br>Maximum file size: 10MB';
+                        
+                        // Here you would typically add the new document to the table
+                        // addDocumentToTable(fileInput.files[0], documentType.value);
+                        
+                    }, 500);
+                }
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '% uploaded';
+            }, 200);
+        });
+    </script>
+</body>
+</html>

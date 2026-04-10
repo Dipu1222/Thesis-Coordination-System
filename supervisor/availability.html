@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Availability Management - Supervisor Dashboard</title>
+    <style>
+        /* Professional Header Styles */
+        .professional-header {
+            background: #2c3e50;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-logo span {
+            color: #3498db;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(52, 152, 219, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name {
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Professional Footer Styles */
+        .professional-footer {
+            background: #1a252f;
+            color: white;
+            padding: 2.5rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .footer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .footer-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+
+        .footer-contact {
+            text-align: right;
+        }
+
+        .contact-info {
+            margin-bottom: 1rem;
+        }
+
+        .contact-label {
+            display: block;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-value {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Main content styles (keeping existing) */
+        .availability-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .availability-sidebar {
+            background: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .availability-form {
+            background: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+        
+        .day-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .day-button {
+            padding: 0.5rem;
+            border: 1px solid #dfe6e9;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .day-button:hover {
+            border-color: #3498db;
+        }
+        
+        .day-button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .time-slots {
+            margin: 1.5rem 0;
+        }
+        
+        .time-slot {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+        
+        .slot-time {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 120px;
+        }
+        
+        .slot-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .availability-calendar {
+            background: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #dfe6e9;
+            border: 1px solid #dfe6e9;
+        }
+        
+        .calendar-day {
+            background: white;
+            min-height: 100px;
+            padding: 0.5rem;
+            position: relative;
+        }
+        
+        .calendar-day-header {
+            background: #ecf0f1;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .calendar-day.today {
+            background: #e3f2fd;
+        }
+        
+        .calendar-event {
+            background: #3498db;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.25rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .meetings-list {
+            margin-top: 1.5rem;
+        }
+        
+        .meeting-item {
+            background: white;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .meeting-item:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .meeting-title {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .meeting-time {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .meeting-team {
+            background: #ecf0f1;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .slot-config {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .recurring-settings {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* General styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #dfe6e9;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3498db;
+            color: #3498db;
+        }
+
+        .btn-outline:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #dfe6e9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #dfe6e9;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .availability-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .footer-contact {
+                text-align: center;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .day-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Professional Header -->
+    <header class="professional-header">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="dashboard.html" class="nav-logo">Thesis<span>Coord</span></a>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-requests.html">Team Requests</a></li>
+                <li><a href="annex-review.html">Annex Review</a></li>
+                <li><a href="progress-monitoring.html">Progress Monitoring</a></li>
+                <li><a href="report-review.html">Report Review</a></li>
+                <li><a href="defense-evaluation.html">Defense Evaluation</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="availability.html" class="active">Availability</a></li>
+            </ul>
+            
+            <div class="user-profile">
+                <div class="user-avatar">S</div>
+                <span class="user-name">Dr. Smith</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- All your existing content remains exactly the same -->
+        <h1>Availability Management</h1>
+        
+        <!-- Current Status -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Current Availability Status</h3>
+                <button onclick="toggleAvailability()" class="btn btn-outline" id="toggleAvailabilityBtn">
+                    Toggle Availability
+                </button>
+            </div>
+            <div class="grid grid-3">
+                <div>
+                    <p><strong>Status:</strong> <span id="availabilityStatus" class="badge badge-success">Available</span></p>
+                    <p><strong>Next Available:</strong> <span id="nextAvailable">Today, 10:00 AM</span></p>
+                </div>
+                <div>
+                    <p><strong>Meetings Today:</strong> <span id="meetingsToday">2</span></p>
+                    <p><strong>Available Slots:</strong> <span id="availableSlots">6</span></p>
+                </div>
+                <div>
+                    <p><strong>Booked This Week:</strong> <span id="bookedThisWeek">8</span></p>
+                    <p><strong>Open Slots:</strong> <span id="openSlots">12</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="availability-container">
+            <!-- Schedule Management -->
+            <div class="availability-sidebar">
+                <h3>Manage Schedule</h3>
+                
+                <div class="form-group">
+                    <label>Select Day</label>
+                    <div class="day-selector">
+                        <div class="day-button active" onclick="selectDay(0)">Sunday</div>
+                        <div class="day-button" onclick="selectDay(1)">Monday</div>
+                        <div class="day-button" onclick="selectDay(2)">Tuesday</div>
+                        <div class="day-button" onclick="selectDay(3)">Wednesday</div>
+                        <div class="day-button" onclick="selectDay(4)">Thursday</div>
+                        <div class="day-button" onclick="selectDay(5)">Friday</div>
+                        <div class="day-button" onclick="selectDay(6)">Saturday</div>
+                    </div>
+                </div>
+                
+                <div class="slot-config">
+                    <div class="form-group">
+                        <label for="slotDuration">Slot Duration (minutes)</label>
+                        <select id="slotDuration">
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60">60 minutes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maxSlots">Max Slots Per Day</label>
+                        <input type="number" id="maxSlots" min="1" max="20" value="8">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="startTime">Start Time</label>
+                    <input type="time" id="startTime" value="09:00">
+                </div>
+                
+                <div class="form-group">
+                    <label for="endTime">End Time</label>
+                    <input type="time" id="endTime" value="17:00">
+                </div>
+                
+                <div class="recurring-settings">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="applyToAll">
+                        Apply to all weekdays
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <input type="checkbox" id="includeWeekends">
+                        Include weekends
+                    </label>
+                </div>
+                
+                <button onclick="saveAvailability()" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Save Schedule
+                </button>
+            </div>
+            
+            <!-- Time Slots -->
+            <div class="availability-form">
+                <h3>Available Time Slots</h3>
+                <p class="text-muted" id="selectedDay">Sunday, December 15</p>
+                
+                <div class="time-slots" id="timeSlots">
+                    <!-- Time slots will be generated here -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏰</div>
+                        <p>No time slots configured</p>
+                        <p class="text-muted">Set your availability schedule to create time slots</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons" style="display: flex; gap: 1rem;">
+                    <button onclick="generateSlots()" class="btn btn-outline">
+                        Generate Slots
+                    </button>
+                    <button onclick="clearSlots()" class="btn btn-outline">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Calendar View -->
+        <div class="availability-calendar">
+            <div class="calendar-header">
+                <h3>Monthly Calendar</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="changeMonth(-1)" class="btn btn-outline">← Previous</button>
+                    <span id="currentMonth" style="font-weight: 600;">December 2024</span>
+                    <button onclick="changeMonth(1)" class="btn btn-outline">Next →</button>
+                </div>
+            </div>
+            
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar will be generated here -->
+            </div>
+        </div>
+        
+        <!-- Upcoming Meetings -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Upcoming Meetings</h3>
+                <button onclick="scheduleMeeting()" class="btn btn-primary">Schedule Meeting</button>
+            </div>
+            
+            <div class="meetings-list" id="upcomingMeetings">
+                <!-- Meetings will be loaded here -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <p>No upcoming meetings</p>
+                    <p class="text-muted">Meetings scheduled with teams will appear here</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Meeting Modal -->
+    <div id="meetingModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Schedule Meeting</h3>
+                <button class="close" onclick="closeMeetingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="meetingForm">
+                    <div class="form-group">
+                        <label for="meetingTeam">Select Team *</label>
+                        <select id="meetingTeam" required>
+                            <option value="">Choose a team</option>
+                            <!-- Teams will be loaded here -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingTitle">Meeting Title *</label>
+                        <input type="text" id="meetingTitle" required placeholder="e.g., Progress Review, Project Discussion">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingDate">Date *</label>
+                        <input type="date" id="meetingDate" required>
+                    </div>
+                    
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="meetingStartTime">Start Time *</label>
+                            <input type="time" id="meetingStartTime" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="meetingEndTime">End Time *</label>
+                            <input type="time" id="meetingEndTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingType">Meeting Type</label>
+                        <select id="meetingType">
+                            <option value="consultation">Consultation</option>
+                            <option value="progress_review">Progress Review</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingLocation">Location</label>
+                        <input type="text" id="meetingLocation" placeholder="e.g., Office, Room 101, Online">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingAgenda">Agenda (one item per line)</label>
+                        <textarea id="meetingAgenda" rows="3" placeholder="Enter agenda items..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingDescription">Additional Notes</label>
+                        <textarea id="meetingDescription" rows="3" placeholder="Any additional information..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeMeetingModal()" class="btn btn-secondary">Cancel</button>
+                <button onclick="saveMeeting()" class="btn btn-primary">Schedule Meeting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="professional-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-title">Thesis Coordination System</div>
+                    <p class="footer-description">
+                        Streamline thesis supervision and team coordination for academic excellence.
+                        Manage availability, schedule meetings, and track progress efficiently.
+                    </p>
+                </div>
+                
+                <div class="footer-contact">
+                    <div class="contact-info">
+                        <span class="contact-label">For Support</span>
+                        <span class="contact-value">support@thesiscoord.edu</span>
+                    </div>
+                    <div class="contact-info">
+                        <span class="contact-label">Phone</span>
+                        <span class="contact-value">+880 XXX XXXX XXX</span>
+                    </div>
+                    <div class="contact-info">
+                        <span class="contact-label">Department</span>
+                        <span class="contact-value">Computer Science & Engineering</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2024 Thesis Coordination System. All rights reserved.
+                </div>
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/availability.js"></script>
+</body>
+</html>

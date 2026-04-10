@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Student Info */
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--primary);
+            text-align: right;
+        }
+
+        /* Team Status */
+        .team-status {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .status-inactive {
+            background: rgba(189, 195, 199, 0.1);
+            color: var(--dark-gray);
+        }
+
+        /* Notifications */
+        .notification-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            margin-top: 0.2rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--light);
+        }
+
+        .data-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--dark-gray);
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-approved {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .badge-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-rejected {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        .badge-upcoming {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Loading States */
+        .loading {
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        /* Section Spacing */
+        .section {
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .card-content {
+                padding: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="team-formation.html">Team Formation</a></li>
+                <li><a href="supervisor-selection.html">Supervisors</a></li>
+                <li><a href="annex-form.html">Annex Form</a></li>
+                <li><a href="document-upload.html">Documents</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="defense-schedule.html">Defense</a></li>
+                <li><a href="results.html">Results</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Student Dashboard</h1>
+            <div class="page-subtitle">Overview of your thesis progress and activities</div>
+        </div>
+        
+        <div class="dashboard-grid">
+            <!-- Student Information -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Student Information</div>
+                </div>
+                <div class="card-content">
+                    <div class="info-item">
+                        <span class="info-label">Name</span>
+                        <span class="info-value" id="studentName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Student ID</span>
+                        <span class="info-value" id="studentId">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Department</span>
+                        <span class="info-value" id="department">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Semester</span>
+                        <span class="info-value" id="semester">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">CGPA</span>
+                        <span class="info-value" id="cgpa">Loading...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Team Status -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Team Status</div>
+                </div>
+                <div class="card-content">
+                    <div class="team-status" id="teamStatus">
+                        Loading team information...
+                    </div>
+                    <div id="teamActions">
+                        <!-- Actions will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recent Notifications</div>
+                </div>
+                <div class="card-content">
+                    <div id="notificationsList" class="loading">
+                        Loading notifications...
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Documents -->
+        <div class="card section">
+            <div class="card-header">
+                <div class="card-title">
+                    Recent Documents
+                    <a href="document-upload.html" class="btn btn-outline">Upload New</a>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>File Name</th>
+                                <th>Status</th>
+                                <th>Submitted</th>
+                            </tr>
+                        </thead>
+                        <tbody id="documentsList">
+                            <tr>
+                                <td colspan="4" class="loading">Loading documents...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Defenses -->
+        <div class="card section">
+            <div class="card-header">
+                <div class="card-title">
+                    Upcoming Defenses
+                    <a href="defense-schedule.html" class="btn btn-outline">View All</a>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Venue</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="defensesList">
+                            <tr>
+                                <td colspan="5" class="loading">Loading defenses...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">Department of Computer Science & Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

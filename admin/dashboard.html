@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .logo small {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Stats Grid */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #000000;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .quick-action {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .quick-action:hover {
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .quick-action-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .quick-action div:last-child {
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.95rem;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--light);
+        }
+
+        .data-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: #000000;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: #000000;
+            vertical-align: middle;
+            opacity: 0.9;
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-active {
+            background: var(--success);
+        }
+
+        .status-inactive {
+            background: var(--danger);
+        }
+
+        .status-pending {
+            background: var(--warning);
+        }
+
+        /* System Health Grid */
+        .system-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .system-item {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .system-item h4 {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .system-item p {
+            color: #000000;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Loading States */
+        .loading {
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .system-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .data-table {
+                font-size: 0.85rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <nav class="container">
+        <div class="logo">Thesis<span>Coord</span> <small style="font-size: 0.8rem; color: #667eea;">Admin</small></div>
+        <ul class="nav-links">
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="users.html">Users</a></li>
+            <li><a href="teams.html">Teams</a></li>
+            <li><a href="supervisors.html">Supervisors</a></li>
+            <li><a href="defenses.html">Defenses</a></li>
+            <li><a href="documents.html">Documents</a></li>
+            <li><a href="announcements.html">Announcements</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="settings.html">Settings</a></li>
+        </ul>
+        <div class="user-info">
+            <!-- This will be filled by auth.js -->
+        </div>
+    </nav>
+</header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Admin Dashboard</h1>
+            <div class="page-subtitle">System administration and management</div>
+        </div>
+        
+        <!-- Statistics Cards -->
+        <div class="admin-stats" id="dashboardStats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalStudents">0</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalTeams">0</div>
+                <div class="stat-label">Active Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingApprovals">0</div>
+                <div class="stat-label">Pending Approvals</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="upcomingDefenses">0</div>
+                <div class="stat-label">Upcoming Defenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSupervisors">0</div>
+                <div class="stat-label">Supervisors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingDocuments">0</div>
+                <div class="stat-label">Pending Documents</div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Quick Actions</div>
+            </div>
+            <div class="card-content">
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="window.location.href='users.html'">
+                        <div class="quick-action-icon">👤</div>
+                        <div>Add New User</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='teams.html'">
+                        <div class="quick-action-icon">👥</div>
+                        <div>Manage Teams</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='defenses.html'">
+                        <div class="quick-action-icon">📅</div>
+                        <div>Schedule Defense</div>
+                    </div>
+                    <div class="quick-action" onclick="window.location.href='announcements.html'">
+                        <div class="quick-action-icon">📢</div>
+                        <div>Send Announcement</div>
+                    </div>
+                    <div class="quick-action" onclick="showComingSoon()">
+                        <div class="quick-action-icon">📊</div>
+                        <div>Generate Report</div>
+                    </div>
+                    <div class="quick-action" onclick="showComingSoon()">
+                        <div class="quick-action-icon">⚙️</div>
+                        <div>System Settings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Recent Users</div>
+                    <a href="users.html" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentUsers">
+                                <tr>
+                                    <td colspan="4" class="loading">Loading users...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Defenses</div>
+                    <a href="defenses.html" class="btn btn-outline btn-sm">View All</a>
+                </div>
+                <div class="card-content">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Team</th>
+                                    <th>Type</th>
+                                    <th>Venue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentDefenses">
+                                <tr>
+                                    <td colspan="4" class="loading">Loading defenses...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Health -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">System Status</div>
+            </div>
+            <div class="card-content">
+                <div class="system-grid">
+                    <div class="system-item">
+                        <h4>Database</h4>
+                        <p><span class="status-indicator status-active"></span> Online</p>
+                    </div>
+                    <div class="system-item">
+                        <h4>Server</h4>
+                        <p><span class="status-indicator status-active"></span> Running</p>
+                    </div>
+                    <div class="system-item">
+                        <h4>Storage</h4>
+                        <p><span class="status-indicator status-active"></span> 65% Used</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System - Admin Panel © 2024</p>
+            <p class="footer-text">Last updated: <span id="currentDateTime"></span></p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results & Feedback - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Results Summary */
+        .results-summary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .summary-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .final-grade {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        .grade-remark {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .result-status {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Progress Indicator */
+        .progress-tracker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .progress-tracker:before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .step-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-indicator.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-indicator.active {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            text-align: center;
+            color: #000000;
+            font-weight: 500;
+            max-width: 100px;
+        }
+
+        /* Marks Breakdown */
+        .marks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .mark-card {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .mark-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .mark-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .mark-label {
+            font-size: 0.9rem;
+            color: #000000;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .mark-progress {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.75rem;
+        }
+
+        .mark-progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Result Cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .result-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--border);
+        }
+
+        .result-card.passed {
+            border-left-color: var(--success);
+        }
+
+        .result-card.conditional {
+            border-left-color: var(--warning);
+        }
+
+        .result-card.failed {
+            border-left-color: var(--danger);
+        }
+
+        .result-card.pending {
+            border-left-color: var(--medium-gray);
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .result-details {
+            margin: 0.75rem 0;
+        }
+
+        .result-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-label {
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        .detail-value {
+            color: #000000;
+            font-weight: 500;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .status-passed {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .status-failed {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .status-approved {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        /* Feedback Sections */
+        .feedback-section {
+            margin: 1.5rem 0;
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-title {
+            font-weight: 600;
+            color: #000000;
+            font-size: 1rem;
+        }
+
+        .feedback-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .feedback-item:hover {
+            background: var(--light);
+        }
+
+        .feedback-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .feedback-author {
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .feedback-date {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        .feedback-content {
+            color: #000000;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        /* Corrections */
+        .corrections-box {
+            background: rgba(255, 243, 205, 0.3);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .corrections-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .corrections-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #000000;
+            opacity: 0.9;
+        }
+
+        .corrections-list li:before {
+            content: "•";
+            color: var(--warning);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Certificate */
+        .certificate-card {
+            border: 2px dashed var(--secondary);
+            border-radius: 10px;
+            padding: 2.5rem;
+            text-align: center;
+            background: white;
+            margin: 1.5rem 0;
+        }
+
+        .certificate-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1.5rem;
+        }
+
+        .certificate-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000000;
+            margin: 1rem 0;
+        }
+
+        .certificate-project {
+            font-size: 1.1rem;
+            color: #000000;
+            opacity: 0.9;
+            margin: 1rem 0;
+        }
+
+        .certificate-meta {
+            margin: 1.5rem 0;
+            color: #000000;
+            opacity: 0.8;
+        }
+
+        .download-options {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        /* Appeal Section */
+        .appeal-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .appeal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .appeal-guidelines {
+            background: var(--light);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .appeal-form {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark-gray);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #000000;
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            color: #000000;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .marks-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .progress-tracker {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .progress-step {
+                flex: 0 0 calc(33.333% - 1rem);
+            }
+
+            .final-grade {
+                font-size: 2.5rem;
+            }
+
+            .download-options {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-step {
+                flex: 0 0 calc(50% - 1rem);
+            }
+
+            .marks-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .certificate-card {
+                padding: 1.5rem;
+            }
+
+            .certificate-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Loading States */
+        .loading {
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-formation.html">Team Formation</a></li>
+                <li><a href="supervisor-selection.html">Supervisors</a></li>
+                <li><a href="annex-form.html">Annex Form</a></li>
+                <li><a href="document-upload.html">Documents</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="defense-schedule.html">Defense</a></li>
+                <li><a href="results.html" class="active">Results</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Results & Feedback</h1>
+            <div class="page-subtitle">View your thesis evaluation results and feedback</div>
+        </div>
+        
+        <!-- Results Summary -->
+        <div class="results-summary">
+            <div class="summary-title">Thesis Defense Results</div>
+            <div class="final-grade" id="finalGrade">A+</div>
+            <div class="grade-remark" id="gradeRemark">Excellent - Outstanding Performance</div>
+            <div class="result-status">Status: <strong>Passed with Distinction</strong> • Published: Dec 15, 2024</div>
+        </div>
+        
+        <!-- Progress Tracker -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Thesis Progress Status</div>
+            </div>
+            <div class="card-content">
+                <div class="progress-tracker">
+                    <div class="progress-step">
+                        <div class="step-indicator completed">✓</div>
+                        <div class="step-label">Team Formation</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator completed">✓</div>
+                        <div class="step-label">Supervisor Assignment</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator completed">✓</div>
+                        <div class="step-label">Annex Submission</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator completed">✓</div>
+                        <div class="step-label">Document Submission</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator completed">✓</div>
+                        <div class="step-label">Defense Completed</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator active">✓</div>
+                        <div class="step-label">Results Published</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Marks Breakdown -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Detailed Marks Breakdown</div>
+            </div>
+            <div class="card-content">
+                <div class="marks-grid">
+                    <div class="mark-card">
+                        <div class="mark-value">92/100</div>
+                        <div class="mark-label">Supervisor Evaluation</div>
+                        <div class="mark-progress">
+                            <div class="mark-progress-fill" style="width: 92%"></div>
+                        </div>
+                    </div>
+                    <div class="mark-card">
+                        <div class="mark-value">88/100</div>
+                        <div class="mark-label">Mid-term Defense</div>
+                        <div class="mark-progress">
+                            <div class="mark-progress-fill" style="width: 88%"></div>
+                        </div>
+                    </div>
+                    <div class="mark-card">
+                        <div class="mark-value">95/100</div>
+                        <div class="mark-label">Final Defense</div>
+                        <div class="mark-progress">
+                            <div class="mark-progress-fill" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="mark-card">
+                        <div class="mark-value">90/100</div>
+                        <div class="mark-label">Report Quality</div>
+                        <div class="mark-progress">
+                            <div class="mark-progress-fill" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="mark-card">
+                        <div class="mark-value">91.3/100</div>
+                        <div class="mark-label">Final Grade</div>
+                        <div class="mark-progress">
+                            <div class="mark-progress-fill" style="width: 91.3%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Defense Results -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Defense Evaluations</div>
+            </div>
+            <div class="card-content">
+                <div class="results-grid">
+                    <div class="result-card passed">
+                        <div class="result-title">Pre-Defense Evaluation</div>
+                        <div class="result-details">
+                            <div class="result-detail">
+                                <span class="detail-label">Status:</span>
+                                <span class="detail-value">
+                                    <span class="status-badge status-passed">Passed</span>
+                                </span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Date:</span>
+                                <span class="detail-value">Nov 15, 2024</span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Marks:</span>
+                                <span class="detail-value">88/100</span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Evaluated By:</span>
+                                <span class="detail-value">Dr. Smith</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card passed">
+                        <div class="result-title">Final Defense</div>
+                        <div class="result-details">
+                            <div class="result-detail">
+                                <span class="detail-label">Status:</span>
+                                <span class="detail-value">
+                                    <span class="status-badge status-passed">Passed</span>
+                                </span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Date:</span>
+                                <span class="detail-value">Dec 10, 2024</span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Marks:</span>
+                                <span class="detail-value">95/100</span>
+                            </div>
+                            <div class="result-detail">
+                                <span class="detail-label">Panel:</span>
+                                <span class="detail-value">3 Members</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Supervisor Feedback -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Supervisor Feedback</div>
+                <span class="status-badge status-approved">Submitted</span>
+            </div>
+            <div class="card-content">
+                <div class="feedback-section">
+                    <div class="feedback-item">
+                        <div class="feedback-meta">
+                            <div class="feedback-author">Prof. Kamal Hossain</div>
+                            <div class="feedback-date">Dec 12, 2024</div>
+                        </div>
+                        <div class="feedback-content">
+                            Outstanding work on the implementation phase. The code quality is excellent and documentation is thorough. 
+                            The team showed strong collaboration skills and met all project milestones ahead of schedule.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Panel Feedback -->
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Panel Members Feedback</div>
+    </div>
+    <div class="card-content">
+        <div class="feedback-section">
+            <div class="feedback-item">
+                <div class="feedback-meta">
+                    <div class="feedback-author">Dr. Mohammad Ali (Chairperson)</div>
+                    <div class="feedback-date">Dec 10, 2024</div>
+                </div>
+                <div class="feedback-content">
+                    Excellent presentation skills and deep understanding of the subject matter. 
+                    The project demonstrates innovation and practical application. 
+                    Suggestions: Consider adding more real-world testing scenarios.
+                </div>
+            </div>
+            
+            <div class="feedback-item">
+                <div class="feedback-meta">
+                    <div class="feedback-author">Dr. Fatima Begum (Internal Examiner)</div>
+                    <div class="feedback-date">Dec 10, 2024</div>
+                </div>
+                <div class="feedback-content">
+                    Strong technical implementation with good architecture decisions. 
+                    The methodology is sound and results are well-documented. 
+                    Minor improvement needed in literature review section.
+                </div>
+            </div>
+            
+            <div class="feedback-item">
+                <div class="feedback-meta">
+                    <div class="feedback-author">Dr. Abdul Karim (External Examiner)</div>
+                    <div class="feedback-date">Dec 10, 2024</div>
+                </div>
+                <div class="feedback-content">
+                    Impressive project with clear business value. 
+                    The team handled questions professionally and showed good problem-solving skills. 
+                    Consider publishing the work in a conference.
+                </div>
+            </div>
+
+            <!-- Additional feedback from other panel members -->
+            <div class="feedback-item">
+                <div class="feedback-meta">
+                    <div class="feedback-author">Dr. Nasreen Sultana (Internal Member)</div>
+                    <div class="feedback-date">Dec 10, 2024</div>
+                </div>
+                <div class="feedback-content">
+                    Good use of modern technologies and frameworks. The UI/UX design is user-friendly. 
+                    Suggestion: Add more accessibility features for differently-abled users.
+                </div>
+            </div>
+            
+            <div class="feedback-item">
+                <div class="feedback-meta">
+                    <div class="feedback-author">Prof. Kamal Hossain (External Member)</div>
+                    <div class="feedback-date">Dec 10, 2024</div>
+                </div>
+                <div class="feedback-content">
+                    The statistical analysis is comprehensive. The team has shown good research methodology. 
+                    Consider expanding the dataset for more robust validation.
+                </div>
+            </div>
+        </div>
+
+        <!-- Overall Panel Comments -->
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(52, 152, 219, 0.1); border-radius: 8px; border-left: 4px solid var(--secondary);">
+            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                <span style="font-size: 1.5rem;">📋</span>
+                <div>
+                    <div style="font-weight: 600; color: #000000; margin-bottom: 0.75rem;">Overall Panel Comments</div>
+                    <div style="color: #000000; opacity: 0.9; line-height: 1.6;">
+                        The panel commends the team for their excellent work on "AI-Based Adaptive Learning System". 
+                        The project shows strong technical competence, innovative thinking, and good teamwork. 
+                        The defense presentation was well-organized and questions were answered confidently. 
+                        <strong>Overall Grade: A+ (91.3%)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Summary -->
+        <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div style="background: rgba(39, 174, 96, 0.1); padding: 1rem; border-radius: 6px; text-align: center;">
+                <div style="font-weight: 600; color: #000000; font-size: 1.1rem;">5/5</div>
+                <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Panel Members</div>
+            </div>
+            <div style="background: rgba(39, 174, 96, 0.1); padding: 1rem; border-radius: 6px; text-align: center;">
+                <div style="font-weight: 600; color: #000000; font-size: 1.1rem;">48/50</div>
+                <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Presentation Score</div>
+            </div>
+            <div style="background: rgba(39, 174, 96, 0.1); padding: 1rem; border-radius: 6px; text-align: center;">
+                <div style="font-weight: 600; color: #000000; font-size: 1.1rem;">47/50</div>
+                <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Q&A Score</div>
+            </div>
+            <div style="background: rgba(39, 174, 96, 0.1); padding: 1rem; border-radius: 6px; text-align: center;">
+                <div style="font-weight: 600; color: #000000; font-size: 1.1rem;">95/100</div>
+                <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Total Defense Score</div>
+            </div>
+        </div>
+
+        <!-- Action Items -->
+        <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 243, 205, 0.3); border-radius: 8px;">
+            <div style="font-weight: 600; color: #000000; margin-bottom: 1rem;">Action Items from Panel:</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div style="background: white; padding: 1rem; border-radius: 6px; border: 1px solid var(--border);">
+                    <div style="font-weight: 500; color: #000000; margin-bottom: 0.5rem;">📚 Literature Review</div>
+                    <div style="font-size: 0.9rem; color: #000000; opacity: 0.8;">Add 5 more recent references (2019-2024)</div>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 6px; border: 1px solid var(--border);">
+                    <div style="font-weight: 500; color: #000000; margin-bottom: 0.5rem;">🧪 Testing</div>
+                    <div style="font-size: 0.9rem; color: #000000; opacity: 0.8;">Increase test coverage to 90%</div>
+                </div>
+                <div style="background: white; padding: 1rem; border-radius: 6px; border: 1px solid var(--border);">
+                    <div style="font-weight: 500; color: #000000; margin-bottom: 0.5rem;">📊 Documentation</div>
+                    <div style="font-size: 0.9rem; color: #000000; opacity: 0.8;">Add API documentation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <!-- Required Corrections -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Required Corrections</div>
+                <span class="status-badge status-approved">Completed</span>
+            </div>
+            <div class="card-content">
+                <div class="corrections-box">
+                    <p style="color: #000000; opacity: 0.9; margin-bottom: 1rem;">
+                        <strong>Note:</strong> The following corrections have been completed and approved.
+                    </p>
+                    <ul class="corrections-list">
+                        <li>Expand literature review with 3 additional recent papers</li>
+                        <li>Add performance comparison with existing systems</li>
+                        <li>Include more detailed system architecture diagrams</li>
+                        <li>Update references section with complete citations</li>
+                        <li>Add limitations and future work section</li>
+                    </ul>
+                </div>
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(39, 174, 96, 0.1); border-radius: 6px;">
+                    <p style="color: #000000; opacity: 0.9; margin: 0;">
+                        ✅ <strong>Corrections Approved:</strong> All required corrections were submitted on Dec 13, 2024 and approved by the supervisor.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Certificate -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Completion Certificate</div>
+            </div>
+            <div class="card-content">
+                <div class="certificate-card">
+                    <div class="certificate-title">Certificate of Completion</div>
+                    <p style="color: #000000; opacity: 0.8;">This certifies that</p>
+                    <div class="certificate-name">Prof. Kamal Hossain, Dr. Nasreen Sultana, Dr. Abdul Karim</div>
+                    <p style="color: #000000; opacity: 0.8;">has successfully completed the thesis project</p>
+                    <div class="certificate-project">"AI-Based Adaptive Learning System"</div>
+                    <div class="certificate-meta">
+                        <p>Under the supervision of <strong>Prof. Kamal Hossain</strong></p>
+                        <p>Awarded Grade: <strong>A+ (91.3%)</strong></p>
+                        <p>Date of Completion: <strong>December 15, 2024</strong></p>
+                    </div>
+                    
+                    <div class="download-options">
+                        <button onclick="downloadCertificate('pdf')" class="btn btn-primary">
+                            📥 Download PDF Certificate
+                        </button>
+                        <button onclick="downloadCertificate('image')" class="btn btn-outline">
+                            🖼️ Download as Image
+                        </button>
+                        <button onclick="shareCertificate()" class="btn btn-secondary">
+                            📤 Share Certificate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Appeal Process -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Grade Appeal Process</div>
+            </div>
+            <div class="card-content">
+                <div class="appeal-section">
+                    <p style="color: #000000; opacity: 0.9; margin-bottom: 1.5rem;">
+                        If you believe there has been an error in grade calculation, you may submit an appeal for review.
+                    </p>
+                    
+                    <div class="appeal-grid">
+                        <div class="appeal-guidelines">
+                            <div style="font-weight: 600; color: #000000; margin-bottom: 1rem;">Appeal Guidelines:</div>
+                            <ul class="guideline-list" style="margin: 0;">
+                                <li>Appeals must be submitted within 7 days of result publication</li>
+                                <li>Provide detailed justification with specific concerns</li>
+                                <li>Include supporting evidence or documentation</li>
+                                <li>Appeal will be reviewed by academic committee</li>
+                                <li>Decision will be communicated within 14 working days</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="appeal-form">
+                            <div class="form-group">
+                                <label class="form-label">Appeal Reason</label>
+                                <textarea class="form-textarea" id="appealReason" 
+                                          placeholder="Please provide detailed reason for your appeal..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Supporting Documents (Optional)</label>
+                                <input type="file" class="form-input" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px;">
+                            </div>
+                            <button onclick="submitAppeal()" class="btn btn-outline" style="width: 100%;">
+                                Submit Appeal Request
+                            </button>
+                            <p style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 1rem;">
+                                Appeal deadline: December 22, 2024
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">For result-related queries, contact: results@thesiscoord.edu</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/results.js"></script>
+    <script>
+        // Initialize with sample data
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update marks with sample data
+            const marks = [
+                { value: '92/100', label: 'Supervisor Evaluation', progress: 92 },
+                { value: '88/100', label: 'Mid-term Defense', progress: 88 },
+                { value: '95/100', label: 'Final Defense', progress: 95 },
+                { value: '90/100', label: 'Report Quality', progress: 90 },
+                { value: '91.3/100', label: 'Final Grade', progress: 91.3 }
+            ];
+            
+            // Update progress bars
+            document.querySelectorAll('.mark-progress-fill').forEach((bar, index) => {
+                if (marks[index]) {
+                    bar.style.width = marks[index].progress + '%';
+                }
+            });
+        });
+        
+        function downloadCertificate(format) {
+            if (format === 'pdf') {
+                alert('PDF certificate download started.');
+            } else {
+                alert('Image certificate download started.');
+            }
+        }
+        
+        function shareCertificate() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Thesis Certificate',
+                    text: 'Check out my thesis completion certificate!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Certificate link copied to clipboard!');
+            }
+        }
+        
+        function submitAppeal() {
+            const reason = document.getElementById('appealReason').value.trim();
+            if (!reason) {
+                alert('Please provide a reason for your appeal.');
+                return;
+            }
+            
+            alert('Appeal submitted successfully. You will be notified within 14 working days.');
+            document.getElementById('appealReason').value = '';
+        }
+    </script>
+</body>
+</html>

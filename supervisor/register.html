@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Registration - Thesis Coordination System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html" class="active">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Supervisor Registration</h2>
+            
+            <form id="registerForm">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" required placeholder="Dr. First Last">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="facultyId">Faculty ID *</label>
+                        <input type="text" id="facultyId" required placeholder="FAC-001">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" required placeholder="faculty@university.edu">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="department">Department *</label>
+                        <select id="department" required>
+                            <option value="">Select Department</option>
+                            <option value="CSE">Computer Science & Engineering</option>
+                            <option value="EEE">Electrical & Electronic Engineering</option>
+                            <option value="CE">Civil Engineering</option>
+                            <option value="ME">Mechanical Engineering</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="designation">Designation *</label>
+                        <select id="designation" required>
+                            <option value="">Select Designation</option>
+                            <option value="Professor">Professor</option>
+                            <option value="Associate Professor">Associate Professor</option>
+                            <option value="Assistant Professor">Assistant Professor</option>
+                            <option value="Lecturer">Lecturer</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="researchAreas">Research Areas *</label>
+                    <textarea id="researchAreas" required placeholder="Enter research areas separated by commas (e.g., Machine Learning, Data Mining, AI)"></textarea>
+                    <small>Separate each research area with a comma</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Register as Supervisor</button>
+                
+                <p style="text-align: center; margin-top: 1rem;">
+                    Already have an account? <a href="login.html">Login here</a>
+                </p>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="../student/register.html" class="btn btn-outline">Student Registration</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Thesis Coordination System &copy; 2024</p>
+            <p>Faculty registration requires verification</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

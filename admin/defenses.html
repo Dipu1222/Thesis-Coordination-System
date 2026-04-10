@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defense Scheduling - Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span> <small style="font-size: 0.8rem; color: #667eea;">Admin</small></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="users.html">Users</a></li>
+                <li><a href="teams.html">Teams</a></li>
+                <li><a href="supervisors.html">Supervisors</a></li>
+                <li><a href="defenses.html" class="active">Defenses</a></li>
+                <li><a href="documents.html">Documents</a></li>
+                <li><a href="announcements.html">Announcements</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Defense Scheduling</h1>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Schedule New Defense</h3>
+                <button onclick="showComingSoon()" class="btn btn-primary">+ Schedule Defense</button>
+            </div>
+            <div class="card-body">
+                <p>This feature allows you to schedule pre-defense and final defense sessions.</p>
+                <div class="alert alert-info">
+                    <strong>Coming Soon!</strong> Defense scheduling functionality will be available in the next update.
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Upcoming Defenses</h3>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Team</th>
+                            <th>Type</th>
+                            <th>Venue</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="defensesTable">
+                        <tr><td colspan="7">Loading defenses...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+        function showComingSoon() {
+            alert('This feature is coming soon!');
+        }
+        
+        // Load defenses
+        async function loadDefenses() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                const response = await fetch(`${API_BASE_URL}/admin/defenses`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayDefenses(data);
+                }
+            } catch (error) {
+                console.error('Load defenses error:', error);
+            }
+        }
+        
+        function displayDefenses(defenses) {
+            const container = document.getElementById('defensesTable');
+            if (!defenses || defenses.length === 0) {
+                container.innerHTML = '<tr><td colspan="7">No defenses scheduled</td></tr>';
+                return;
+            }
+            
+            container.innerHTML = defenses.map(d => `
+                <tr>
+                    <td>${new Date(d.scheduledDate).toLocaleDateString()}</td>
+                    <td>${d.scheduledTime}</td>
+                    <td>${d.teamId?.teamName || 'N/A'}</td>
+                    <td>${d.defenseType}</td>
+                    <td>${d.venue}</td>
+                    <td><span class="badge badge-info">${d.status}</span></td>
+                    <td>
+                        <button onclick="showComingSoon()" class="btn btn-outline">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadDefenses);
+    </script>
+</body>
+</html>

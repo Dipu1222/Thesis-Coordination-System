@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Dashboard - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--secondary);
+            box-shadow: var(--shadow);
+        }
+
+        .welcome-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .action-card:hover {
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-desc {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        /* Team Cards */
+        .team-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .team-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .team-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .member-badge {
+            background: var(--light);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .leader-badge {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        /* Request Cards */
+        .request-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .request-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Notifications */
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .notification-item:hover {
+            background: var(--light);
+        }
+
+        .notification-item.unread {
+            background: #e3f2fd;
+            border-left: 4px solid var(--secondary);
+        }
+
+        /* Progress Bars */
+        .progress-bar {
+            background: var(--light-gray);
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            background: var(--success);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .text-muted {
+            color: var(--dark-gray);
+            opacity: 0.8;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-primary {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .badge-warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        footer .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="team-requests.html">Team Requests</a></li>
+                <li><a href="annex-review.html">Annex Review</a></li>
+                <li><a href="progress-monitoring.html">Progress Monitoring</a></li>
+                <li><a href="report-review.html">Report Review</a></li>
+                <li><a href="defense-evaluation.html">Defense Evaluation</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="availability.html">Availability</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Supervisor Dashboard</h1>
+        </div>
+        
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-header">
+                <div>
+                    <div class="welcome-title">Welcome Back, <span id="supervisorName">Supervisor</span>!</div>
+                </div>
+                <button onclick="toggleAvailability()" class="btn btn-outline" id="availabilityBtn">
+                    <span id="availabilityStatus">Available</span>
+                </button>
+            </div>
+            <div class="grid grid-4">
+                <div>
+                    <p><strong>Faculty ID:</strong> <span id="facultyId">122</span></p>
+                    <p><strong>Department:</strong> <span id="department">EEE</span></p>
+                </div>
+                <div>
+                    <p><strong>Designation:</strong> <span id="designation">Professor</span></p>
+                    <p><strong>Max Teams:</strong> <span id="maxTeams">10</span></p>
+                </div>
+                <div>
+                    <p><strong>Current Teams:</strong> <span id="currentTeamsCount">N/A</span></p>
+                    <p><strong>Available Slots:</strong> <span id="availableSlots">0/10</span></p>
+                </div>
+                <div>
+                    <p><strong>Research Areas:</strong></p>
+                    <div id="researchAreasList">
+                        <span class="badge badge-primary">AI/ML</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTeams">0</div>
+                <div class="stat-label">Assigned Teams</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingRequests">0</div>
+                <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingAnnexes">0</div>
+                <div class="stat-label">Annexes to Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingDocuments">0</div>
+                <div class="stat-label">Documents to Review</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="upcomingDefenses">0</div>
+                <div class="stat-label">Upcoming Defenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="unreadMessages">0</div>
+                <div class="stat-label">Unread Messages</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Quick Actions</h3>
+            </div>
+            <div class="quick-actions">
+                <a href="team-requests.html" class="action-card">
+                    <div class="action-icon">📋</div>
+                    <div class="action-title">Team Requests</div>
+                    <div class="action-desc" id="pendingRequestsCount">0 pending</div>
+                </a>
+                
+                <a href="annex-review.html" class="action-card">
+                    <div class="action-icon">📄</div>
+                    <div class="action-title">Annex Review</div>
+                    <div class="action-desc" id="pendingAnnexesCount">0 to review</div>
+                </a>
+                
+                <a href="report-review.html" class="action-card">
+                    <div class="action-icon">📝</div>
+                    <div class="action-title">Report Review</div>
+                    <div class="action-desc" id="pendingDocumentsCount">0 to review</div>
+                </a>
+                
+                <a href="progress-monitoring.html" class="action-card">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">Progress Monitoring</div>
+                    <div class="action-desc">Track teams</div>
+                </a>
+                
+                <a href="defense-evaluation.html" class="action-card">
+                    <div class="action-icon">🎓</div>
+                    <div class="action-title">Defense Evaluation</div>
+                    <div class="action-desc" id="upcomingDefensesCount">0 upcoming</div>
+                </a>
+                
+                <a href="chat.html" class="action-card">
+                    <div class="action-icon">💬</div>
+                    <div class="action-title">Chat</div>
+                    <div class="action-desc" id="unreadMessagesCount">0 unread</div>
+                </a>
+                
+                <a href="availability.html" class="action-card">
+                    <div class="action-icon">📅</div>
+                    <div class="action-title">Availability</div>
+                    <div class="action-desc">Set schedule</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <!-- Assigned Teams -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Your Assigned Teams</h3>
+                    <a href="progress-monitoring.html" class="btn btn-outline">View All</a>
+                </div>
+                <div id="teamsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <p>No teams assigned yet</p>
+                        <p class="text-muted">Teams will appear here when assigned</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Team Requests -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Team Requests</h3>
+                    <a href="team-requests.html" class="btn btn-outline">View All</a>
+                </div>
+                <div id="recentRequests">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <p>No pending requests</p>
+                        <p class="text-muted">Team requests will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <!-- Pending Reviews -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Pending Reviews</h3>
+                    <div class="badge badge-warning" id="totalPendingReviews">0 items</div>
+                </div>
+                <div id="pendingReviews">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <p>No pending reviews</p>
+                        <p class="text-muted">Annexes and documents will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Upcoming Events</h3>
+                    <a href="availability.html" class="btn btn-outline">Calendar</a>
+                </div>
+                <div id="upcomingEvents">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <p>No upcoming events</p>
+                        <p class="text-muted">Meetings and defenses will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Notifications</h3>
+                    <button onclick="markAllAsRead()" class="btn btn-sm btn-outline">Mark All Read</button>
+                </div>
+                <div id="notificationsList">
+                    <div class="notification-item unread">
+                        <div style="display: flex; justify-content: space-between;">
+                            <strong>Welcome to ThesisCoord!</strong>
+                            <small>Just now</small>
+                        </div>
+                        <p>Your supervisor account has been activated successfully.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Progress Summary -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Team Progress Summary</h3>
+                    <a href="progress-monitoring.html" class="btn btn-outline">Details</a>
+                </div>
+                <div id="progressSummary">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No team progress data</p>
+                        <p class="text-muted">Progress data will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Activity</h3>
+            </div>
+            <div id="recentActivity">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔄</div>
+                    <p>No recent activity</p>
+                    <p class="text-muted">Your recent actions will appear here</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Thesis Coordination System &copy; 2024</p>
+            <p>Supervisor Portal - Department of Computer Science & Engineering</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

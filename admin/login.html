@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Thesis Coordination System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .login-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .login-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        
+        .login-body {
+            padding: 2rem;
+        }
+        
+        .login-footer {
+            padding: 1rem 2rem;
+            text-align: center;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon input {
+            padding-left: 3rem;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>Admin Panel</h2>
+                <p>Thesis Coordination System</p>
+            </div>
+            
+            <div class="login-body">
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="employeeId">Employee ID</label>
+                        <div class="input-icon">
+                            <i>👤</i>
+                            <input type="text" id="employeeId" required 
+                                   placeholder="Enter your employee ID">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-icon">
+                            <i>🔒</i>
+                            <input type="password" id="password" required 
+                                   placeholder="Enter your password">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                        Admin Login
+                    </button>
+                </form>
+            </div>
+            
+            <div class="login-footer">
+                <div style="display: flex; justify-content: center; gap: 1rem;">
+                    <a href="../student/login.html" style="color: #667eea; text-decoration: none;">
+                        Student Login
+                    </a>
+                    <span style="color: #ccc;">|</span>
+                    <a href="../student/index.html" style="color: #667eea; text-decoration: none;">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+</body>
+</html>

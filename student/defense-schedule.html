@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defense Schedule - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Countdown Timer */
+        .countdown-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .countdown-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .countdown-timer {
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 1.5rem 0;
+        }
+
+        .timer-units {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .timer-unit {
+            text-align: center;
+        }
+
+        .timer-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timer-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .next-defense-info {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Calendar */
+        .calendar-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-month {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-header {
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            color: #000000;
+            background: var(--light);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .calendar-day {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            min-height: 100px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: var(--light-gray);
+        }
+
+        .calendar-day.today {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .calendar-day.has-defense {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: var(--success);
+            cursor: pointer;
+        }
+
+        .calendar-day.has-defense:hover {
+            background: rgba(39, 174, 96, 0.15);
+        }
+
+        .day-number {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .defense-indicator {
+            background: var(--success);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+
+        .defense-event {
+            background: var(--secondary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table thead {
+            background: var(--light);
+        }
+
+        .data-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-weight: 600;
+            color: #000000;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            color: #000000;
+            vertical-align: middle;
+            opacity: 0.9;
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--light-gray);
+        }
+
+        .data-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .badge-scheduled {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .badge-upcoming {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        .badge-completed {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .badge-cancelled {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        /* Defense Details */
+        .defense-details {
+            background: white;
+            border-left: 4px solid var(--secondary);
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-group {
+            margin-bottom: 1rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #000000;
+            opacity: 0.9;
+        }
+
+        .venue-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .venue-icon {
+            font-size: 1.25rem;
+            opacity: 0.8;
+        }
+
+        /* Panel Members */
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .panel-member {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-role {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.8;
+        }
+
+        /* Guidelines */
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .guideline-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .guideline-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .guideline-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guideline-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #000000;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .guideline-list li:before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark-gray);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 0.85rem;
+            }
+            
+            .calendar-day {
+                min-height: 80px;
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 0.8rem;
+            }
+            
+            .calendar-day {
+                min-height: 70px;
+                padding: 0.25rem;
+            }
+
+            .countdown-timer {
+                font-size: 2rem;
+            }
+
+            .timer-units {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            
+            .calendar-header,
+            .calendar-day {
+                font-size: 0.75rem;
+            }
+
+            .guidelines-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Calendar Navigation */
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-formation.html">Team Formation</a></li>
+                <li><a href="supervisor-selection.html">Supervisors</a></li>
+                <li><a href="annex-form.html">Annex Form</a></li>
+                <li><a href="document-upload.html">Documents</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="defense-schedule.html" class="active">Defense</a></li>
+                <li><a href="results.html">Results</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Defense Schedule</h1>
+            <div class="page-subtitle">View and manage your thesis defense schedule</div>
+        </div>
+        
+        <!-- Countdown Timer -->
+        <div class="countdown-card">
+            <div class="countdown-header">Next Defense Countdown</div>
+            <div class="countdown-timer" id="timerDisplay">07:14:23:05</div>
+            <div class="timer-units">
+                <div class="timer-unit">
+                    <div class="timer-value" id="days">07</div>
+                    <div class="timer-label">Days</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="hours">14</div>
+                    <div class="timer-label">Hours</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="minutes">23</div>
+                    <div class="timer-label">Minutes</div>
+                </div>
+                <div class="timer-unit">
+                    <div class="timer-value" id="seconds">05</div>
+                    <div class="timer-label">Seconds</div>
+                </div>
+            </div>
+            <div class="next-defense-info">
+                <strong>Mid-term Defense:</strong> Project: "AI-Based Learning System" • Dec 15, 2024 • 10:00 AM
+            </div>
+        </div>
+        
+        <!-- Defense Calendar -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Defense Calendar - December 2024</div>
+                <div class="calendar-nav">
+                    <button onclick="changeMonth(-1)" class="btn btn-secondary">←</button>
+                    <span class="calendar-month">December 2024</span>
+                    <button onclick="changeMonth(1)" class="btn btn-secondary">→</button>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="calendar-grid" id="calendar">
+                    <div class="calendar-header">Sun</div>
+                    <div class="calendar-header">Mon</div>
+                    <div class="calendar-header">Tue</div>
+                    <div class="calendar-header">Wed</div>
+                    <div class="calendar-header">Thu</div>
+                    <div class="calendar-header">Fri</div>
+                    <div class="calendar-header">Sat</div>
+                    
+                    <!-- Calendar days will be populated by JavaScript -->
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day">4</div>
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day today">11</div>
+                    <div class="calendar-day has-defense">
+                        <div class="day-number">12</div>
+                        <div class="defense-indicator">1</div>
+                        <div class="defense-event">Mid-term</div>
+                    </div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day has-defense">
+                        <div class="day-number">15</div>
+                        <div class="defense-indicator">2</div>
+                        <div class="defense-event">Your Defense</div>
+                    </div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day has-defense">18</div>
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day has-defense">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Defenses -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Upcoming Defenses</div>
+            </div>
+            <div class="card-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Venue</th>
+                                <th>Project Title</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="defensesTable">
+                            <tr>
+                                <td>Dec 15, 2024</td>
+                                <td>10:00 AM</td>
+                                <td>Mid-term</td>
+                                <td>CS Building</td>
+                                <td>AI-Based Learning System</td>
+                                <td><span class="badge badge-upcoming">Upcoming</span></td>
+                                <td>
+                                    <button onclick="viewDetails(1)" class="btn btn-outline btn-sm">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dec 18, 2024</td>
+                                <td>2:30 PM</td>
+                                <td>Progress</td>
+                                <td>Room 304</td>
+                                <td>Smart Healthcare Monitoring</td>
+                                <td><span class="badge badge-scheduled">Scheduled</span></td>
+                                <td>
+                                    <button onclick="viewDetails(2)" class="btn btn-outline btn-sm">View</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dec 27, 2024</td>
+                                <td>11:00 AM</td>
+                                <td>Final</td>
+                                <td>Auditorium</td>
+                                <td>IoT Based Agriculture System</td>
+                                <td><span class="badge badge-scheduled">Scheduled</span></td>
+                                <td>
+                                    <button onclick="viewDetails(3)" class="btn btn-outline btn-sm">View</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+       <!-- Selected Defense Details -->
+<div class="card" id="defenseDetails">
+    <div class="card-header">
+        <div class="card-title">Defense Details</div>
+        <button onclick="closeDetails()" class="btn btn-secondary">Close</button>
+    </div>
+    <div class="card-content">
+        <div class="defense-details">
+            <div class="detail-header">
+                <div>
+                    <div class="detail-title">Mid-term Defense: AI-Based Learning System</div>
+                    <span class="badge badge-upcoming">Upcoming</span>
+                </div>
+            </div>
+            
+            <div class="detail-grid">
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Date & Time</div>
+                        <div class="detail-value">December 15, 2024 • 10:00 AM - 11:30 AM</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Defense Type</div>
+                        <div class="detail-value">Mid-term Defense</div>
+                    </div>
+                    <div class="detail-group">
+                        <div class="detail-label">Duration</div>
+                        <div class="detail-value">90 minutes (Presentation: 20 mins, Q&A: 70 mins)</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Venue</div>
+                        <div class="venue-info">
+                            <span class="venue-icon">🏢</span>
+                            <div>
+                                <div class="detail-value">Computer Science Building</div>
+                                <div class="detail-value" style="font-size: 0.9rem; opacity: 0.8;">Room 301, 3rd Floor</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-group">
+                <div class="detail-label">Panel Members</div>
+                <div class="panel-grid">
+                    <div class="panel-member">
+                        <div class="member-name">Dr. Mohammad Ali</div>
+                        <div class="member-role">Chairperson</div>
+                        <div class="member-department" style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 0.25rem;">
+                            Professor, CSE Department
+                        </div>
+                    </div>
+                    <div class="panel-member">
+                        <div class="member-name">Dr. Fatima Begum</div>
+                        <div class="member-role">Internal Examiner</div>
+                        <div class="member-department" style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 0.25rem;">
+                            Associate Professor, CSE Department
+                        </div>
+                    </div>
+                    <div class="panel-member">
+                        <div class="member-name">Dr. Abdul Karim</div>
+                        <div class="member-role">External Examiner</div>
+                        <div class="member-department" style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 0.25rem;">
+                            Professor, BUET
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-grid" style="margin-top: 1.5rem;">
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Supervisor</div>
+                        <div class="detail-value">Dr. Rashedul Islam</div>
+                        <div class="member-department" style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 0.25rem;">
+                            Assistant Professor, CSE Department
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="detail-group">
+                        <div class="detail-label">Team Members</div>
+                        <div class="detail-value">
+                            <div>Md. Rahim Ahmed</div>
+                            <div>Nusrat Jahan</div>
+                            <div>Shakil Hossain</div>
+                        </div>
+                        <div class="member-department" style="font-size: 0.85rem; color: #000000; opacity: 0.7; margin-top: 0.25rem;">
+                            Batch: 2020, Section: A
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detail-group" style="margin-top: 1.5rem;">
+                <div class="detail-label">Important Instructions</div>
+                <ul class="guideline-list">
+                    <li>Arrive at least 15 minutes before the scheduled time</li>
+                    <li>Bring your student ID card for verification</li>
+                    <li>Prepare a 20-minute presentation</li>
+                    <li>Bring 3 printed copies of your report</li>
+                    <li>Dress in formal business attire</li>
+                    <li>Submit presentation slides via email before defense day</li>
+                    <li>Team leader must introduce all members</li>
+                </ul>
+            </div>
+            
+            <div class="detail-group" style="margin-top: 1.5rem;">
+                <div class="detail-label">Evaluation Criteria</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 0.5rem;">
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 0.75rem; border-radius: 6px; text-align: center;">
+                        <div style="font-weight: 600; color: #000000;">40%</div>
+                        <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Technical Content</div>
+                    </div>
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 0.75rem; border-radius: 6px; text-align: center;">
+                        <div style="font-weight: 600; color: #000000;">20%</div>
+                        <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Presentation</div>
+                    </div>
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 0.75rem; border-radius: 6px; text-align: center;">
+                        <div style="font-weight: 600; color: #000000;">20%</div>
+                        <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Report Quality</div>
+                    </div>
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 0.75rem; border-radius: 6px; text-align: center;">
+                        <div style="font-weight: 600; color: #000000;">20%</div>
+                        <div style="font-size: 0.85rem; color: #000000; opacity: 0.8;">Q&A Session</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button onclick="downloadSchedule()" class="btn btn-primary">
+                    📥 Download Schedule
+                </button>
+                <button onclick="setReminder()" class="btn btn-outline">
+                    ⏰ Set Reminder
+                </button>
+                <button onclick="shareSchedule()" class="btn btn-secondary">
+                    📤 Share
+                </button>
+                <button onclick="joinOnline()" class="btn btn-outline" style="background: rgba(39, 174, 96, 0.1); border-color: var(--success); color: var(--success);">
+                    💻 Join Online
+                </button>
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(243, 156, 18, 0.1); border-radius: 6px; border-left: 4px solid var(--warning);">
+                <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">📌</span>
+                    <div>
+                        <div style="font-weight: 600; color: #000000; margin-bottom: 0.25rem;">Note:</div>
+                        <div style="color: #000000; opacity: 0.9; font-size: 0.9rem;">
+                            In case of any schedule change, you will be notified via email and SMS at least 24 hours before the defense.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+        <!-- Defense Guidelines -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Defense Guidelines</div>
+            </div>
+            <div class="card-content">
+                <div class="guidelines-grid">
+                    <div class="guideline-section">
+                        <div class="guideline-title">Before Defense</div>
+                        <ul class="guideline-list">
+                            <li>Submit all required documents at least 1 week before defense</li>
+                            <li>Prepare presentation slides (15-20 minutes)</li>
+                            <li>Rehearse your presentation with your team</li>
+                            <li>Dress in formal attire</li>
+                            <li>Check all technical equipment beforehand</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guideline-section">
+                        <div class="guideline-title">During Defense</div>
+                        <ul class="guideline-list">
+                            <li>Arrive 15 minutes early</li>
+                            <li>Introduce your team members</li>
+                            <li>Stick to the time limit for presentation</li>
+                            <li>Be prepared for questions from the panel</li>
+                            <li>Maintain professional demeanor</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guideline-section">
+                        <div class="guideline-title">After Defense</div>
+                        <ul class="guideline-list">
+                            <li>Receive feedback from the panel</li>
+                            <li>Make necessary corrections if required</li>
+                            <li>Submit final corrected documents within deadline</li>
+                            <li>Check results on the portal</li>
+                            <li>Collect defense completion certificate</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="guideline-section">
+                        <div class="guideline-title">Grading Criteria</div>
+                        <ul class="guideline-list">
+                            <li>Technical Content: 40%</li>
+                            <li>Presentation Skills: 20%</li>
+                            <li>Report Quality: 20%</li>
+                            <li>Question Answering: 20%</li>
+                            <li>Innovation & Originality: Bonus 10%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">For defense-related queries, contact: defense@thesiscoord.edu</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/defense-schedule.js"></script>
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            // Set target date (December 15, 2024, 10:00 AM)
+            const targetDate = new Date('December 15, 2024 10:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('timerDisplay').textContent = "00:00:00:00";
+                return;
+            }
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Update display
+            document.getElementById('timerDisplay').textContent = 
+                `${String(days).padStart(2, '0')}:${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            // Update individual units
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+        
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+        
+        // Calendar and details functions
+        function viewDetails(defenseId) {
+            const detailsCard = document.getElementById('defenseDetails');
+            detailsCard.style.display = 'block';
+            detailsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function closeDetails() {
+            document.getElementById('defenseDetails').style.display = 'none';
+        }
+        
+        function changeMonth(direction) {
+            // This would normally update the calendar
+            alert(`Calendar month would change ${direction > 0 ? 'forward' : 'backward'}`);
+        }
+        
+        function downloadSchedule() {
+            alert('Schedule downloaded successfully!');
+        }
+        
+        function setReminder() {
+            alert('Reminder set for your defense!');
+        }
+        
+        function shareSchedule() {
+            alert('Schedule shared successfully!');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide details card initially
+            document.getElementById('defenseDetails').style.display = 'none';
+            
+            // Add click events to calendar defense days
+            document.querySelectorAll('.calendar-day.has-defense').forEach(day => {
+                day.addEventListener('click', function() {
+                    viewDetails(1);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

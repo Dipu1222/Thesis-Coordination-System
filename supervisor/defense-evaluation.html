@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defense Evaluation - Supervisor Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .defense-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .defense-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .defense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .defense-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .defense-meta {
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+        
+        .defense-schedule {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #bbdefb;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .schedule-item {
+            text-align: center;
+        }
+        
+        .schedule-label {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.25rem;
+        }
+        
+        .schedule-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .criteria-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .criteria-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .criteria-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .criteria-weight {
+            color: var(--dark-gray);
+            font-size: 0.85rem;
+        }
+        
+        .score-input-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .score-input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .score-range {
+            color: var(--dark-gray);
+            font-size: 0.85rem;
+        }
+        
+        .total-score-display {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            border: 2px solid var(--border);
+        }
+        
+        .score-large {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin: 0.5rem 0;
+        }
+        
+        .grade-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        
+        .grade-A { background: #d4edda; color: #155724; }
+        .grade-B { background: #fff3cd; color: #856404; }
+        .grade-C { background: #f8d7da; color: #721c24; }
+        .grade-F { background: #dc3545; color: white; }
+        
+        .panel-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .panel-member {
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .filter-tab.active {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--dark-gray);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .evaluation-history {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .history-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-requests.html">Team Requests</a></li>
+                <li><a href="annex-review.html">Annex Review</a></li>
+                <li><a href="progress-monitoring.html">Progress Monitoring</a></li>
+                <li><a href="report-review.html">Report Review</a></li>
+                <li><a href="defense-evaluation.html" class="active">Defense Evaluation</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="availability.html">Availability</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Defense Evaluation</h1>
+        
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalDefenses">0</div>
+                <div class="stat-label">Total Defenses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="upcomingDefenses">0</div>
+                <div class="stat-label">Upcoming</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completedDefenses">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="evaluatedDefenses">0</div>
+                <div class="stat-label">Evaluated</div>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterDefenses('upcoming')">Upcoming</div>
+            <div class="filter-tab" onclick="filterDefenses('completed')">Completed</div>
+            <div class="filter-tab" onclick="filterDefenses('evaluated')">Evaluated</div>
+            <div class="filter-tab" onclick="filterDefenses('all')">All Defenses</div>
+        </div>
+        
+        <!-- Defenses List -->
+        <div id="defensesList">
+            <div class="empty-state">
+                <div class="empty-state-icon">🎓</div>
+                <p>No defense sessions scheduled</p>
+                <p class="text-muted">Defense sessions will appear here when scheduled</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Evaluation Modal -->
+    <div id="evaluationModal" class="modal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h3>Defense Evaluation</h3>
+                <button class="close" onclick="closeEvaluationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="defenseDetails">
+                    <!-- Defense details will be loaded here -->
+                </div>
+                
+                <!-- Evaluation Form -->
+                <div class="evaluation-form">
+                    <h4>Evaluation Criteria</h4>
+                    
+                    <div class="evaluation-grid">
+                        <!-- Presentation Skills (20%) -->
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Presentation Clarity</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="presentationClarity" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Time Management</div>
+                                <div class="criteria-weight">Max: 5</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="timeManagement" min="0" max="5" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Communication Skills</div>
+                                <div class="criteria-weight">Max: 5</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="communicationSkills" min="0" max="5" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/5</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Technical Content (40%) -->
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Technical Depth</div>
+                                <div class="criteria-weight">Max: 15</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="technicalDepth" min="0" max="15" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/15</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Innovation</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="innovation" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Methodology</div>
+                                <div class="criteria-weight">Max: 15</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="methodology" min="0" max="15" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/15</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Q&A Performance (20%) -->
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Question Understanding</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="questionUnderstanding" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Answer Quality</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="answerQuality" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Overall (20%) -->
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Overall Performance</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="overallPerformance" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                        
+                        <div class="criteria-card">
+                            <div class="criteria-header">
+                                <div class="criteria-name">Professionalism</div>
+                                <div class="criteria-weight">Max: 10</div>
+                            </div>
+                            <div class="score-input-container">
+                                <input type="number" class="score-input" id="professionalism" min="0" max="10" value="0" onchange="calculateTotal()">
+                                <div class="score-range">/10</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="total-score-display">
+                        <div>Total Score</div>
+                        <div class="score-large" id="totalScoreDisplay">0</div>
+                        <div>/100</div>
+                        <div id="gradeDisplay" class="grade-display grade-F">F</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="strengths">Strengths (one per line)</label>
+                        <textarea id="strengths" rows="3" placeholder="List the team's strengths during the defense..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="areasForImprovement">Areas for Improvement (one per line)</label>
+                        <textarea id="areasForImprovement" rows="3" placeholder="Suggest areas for improvement..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="comments">Overall Comments</label>
+                        <textarea id="comments" rows="4" placeholder="Provide overall feedback and comments..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recommendation">Recommendation</label>
+                        <select id="recommendation" class="form-control">
+                            <option value="pass">Pass</option>
+                            <option value="conditional_pass">Conditional Pass</option>
+                            <option value="needs_revision">Needs Revision</option>
+                            <option value="fail">Fail</option>
+                        </select>
+                    </div>
+                    
+                    <div class="action-buttons" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button onclick="submitDefenseEvaluation()" class="btn btn-success">Submit Evaluation</button>
+                        <button onclick="closeEvaluationModal()" class="btn btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>Thesis Coordination System &copy; 2024</p>
+            <p>Provide fair and constructive evaluations to help students improve</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/defense-evaluation.js"></script>
+</body>
+</html>

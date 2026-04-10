@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Monitoring - Supervisor Dashboard</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Team Selector */
+        .team-selector {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .selector-title {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .teams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .team-option {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .team-option:hover {
+            border-color: var(--secondary);
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .team-option.active {
+            border-color: var(--secondary);
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .team-name {
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .team-project {
+            color: #000000;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .team-progress {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        /* Progress Overview */
+        .progress-overview {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #000000;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin: 1.5rem 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.95rem;
+        }
+
+        .progress-percentage {
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Milestones */
+        .milestones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .milestone-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .milestone-card:hover {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow);
+        }
+
+        .milestone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .milestone-title {
+            font-weight: 600;
+            color: #000000;
+            font-size: 1rem;
+        }
+
+        .milestone-date {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        .milestone-description {
+            color: #000000;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .milestone-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-completed {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+
+        .status-pending {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .status-overdue {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        /* Progress Reports */
+        .reports-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .report-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .report-title {
+            font-weight: 600;
+            color: #000000;
+            font-size: 1rem;
+        }
+
+        .report-date {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        .report-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #000000;
+            font-size: 1.1rem;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        /* Lists */
+        .strengths-list,
+        .weaknesses-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .strengths-list li,
+        .weaknesses-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #000000;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .strengths-list li:before {
+            content: "✓";
+            color: var(--success);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .weaknesses-list li:before {
+            content: "!";
+            color: var(--warning);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Rating */
+        .rating-display {
+            display: flex;
+            gap: 0.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .star {
+            color: #000000;
+            opacity: 0.3;
+            font-size: 1.2rem;
+        }
+
+        .star.filled {
+            color: var(--warning);
+            opacity: 1;
+        }
+
+        /* Meetings */
+        .meetings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .meeting-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .meeting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .meeting-title {
+            font-weight: 600;
+            color: #000000;
+            font-size: 1rem;
+        }
+
+        .meeting-time {
+            font-size: 0.85rem;
+            color: #000000;
+            opacity: 0.7;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #000000;
+            font-size: 0.9rem;
+        }
+
+        .form-label.required:after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: #000000;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .teams-grid,
+            .milestones-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .teams-grid,
+            .milestones-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-requests.html">Team Requests</a></li>
+                <li><a href="annex-review.html">Annex Review</a></li>
+                <li><a href="progress-monitoring.html" class="active">Progress Monitoring</a></li>
+                <li><a href="report-review.html">Report Review</a></li>
+                <li><a href="defense-evaluation.html">Defense Evaluation</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="availability.html">Availability</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Progress Monitoring</h1>
+            <div class="page-subtitle">Track and manage team project progress</div>
+        </div>
+        
+        <!-- Team Selector -->
+        <div class="team-selector">
+            <div class="selector-title">Select Team to Monitor</div>
+            <div id="teamsList" class="teams-grid">
+                <!-- Teams will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Progress Overview -->
+        <div id="progressOverview" style="display: none;">
+            <div class="progress-overview">
+                <div class="card-header">
+                    <div class="card-title" id="teamName">Team Name</div>
+                    <button onclick="openNewMilestoneModal()" class="btn btn-primary">Add Milestone</button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="overallProgress">0%</div>
+                        <div class="stat-label">Overall Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedMilestones">0</div>
+                        <div class="stat-label">Completed Milestones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeMilestones">0</div>
+                        <div class="stat-label">Active Milestones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="overdueMilestones">0</div>
+                        <div class="stat-label">Overdue Milestones</div>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <div class="progress-title">Project Progress</div>
+                        <div class="progress-percentage" id="progressPercentage">0%</div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressBarFill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Milestones Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Project Milestones</div>
+                    <div class="filter-tabs">
+                        <button class="btn btn-outline btn-sm" onclick="filterMilestones('all')">All</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterMilestones('pending')">Pending</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterMilestones('completed')">Completed</button>
+                        <button class="btn btn-outline btn-sm" onclick="filterMilestones('overdue')">Overdue</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="milestonesList" class="milestones-grid">
+                        <!-- Milestones will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Reports -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Progress Reports</div>
+                    <button onclick="openNewReportModal()" class="btn btn-primary">Add Progress Report</button>
+                </div>
+                <div class="card-content">
+                    <div id="progressReportsList" class="reports-list">
+                        <!-- Progress reports will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upcoming Meetings -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Upcoming Meetings</div>
+                    <a href="availability.html" class="btn btn-outline">Schedule Meeting</a>
+                </div>
+                <div class="card-content">
+                    <div id="upcomingMeetings" class="meetings-list">
+                        <!-- Meetings will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+            <div class="empty-icon">📊</div>
+            <div class="empty-text">Select a team to monitor their progress</div>
+            <div class="empty-text" style="font-size: 0.85rem; margin-top: 0.5rem;">Choose a team from the list above to view their progress details</div>
+        </div>
+    </main>
+
+    <!-- New Milestone Modal -->
+    <div id="newMilestoneModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Add New Milestone</div>
+                <button class="modal-close" onclick="closeNewMilestoneModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="milestoneForm">
+                    <div class="form-group">
+                        <label for="milestoneTitle" class="form-label required">Milestone Title</label>
+                        <input type="text" id="milestoneTitle" class="form-input" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="milestoneDescription" class="form-label">Description</label>
+                        <textarea id="milestoneDescription" class="form-textarea" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="milestoneDueDate" class="form-label required">Due Date</label>
+                        <input type="date" id="milestoneDueDate" class="form-input" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeNewMilestoneModal()" class="btn btn-outline">Cancel</button>
+                <button onclick="saveMilestone()" class="btn btn-primary">Save Milestone</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Report Modal -->
+    <div id="newReportModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <div class="modal-title">Create Progress Report</div>
+                <button class="modal-close" onclick="closeNewReportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="progressReportForm">
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="overallProgressInput" class="form-label required">Overall Progress (%)</label>
+                            <input type="number" id="overallProgressInput" class="form-input" min="0" max="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="technicalProgress" class="form-label">Technical Progress (%)</label>
+                            <input type="number" id="technicalProgress" class="form-input" min="0" max="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="documentationProgress" class="form-label">Documentation Progress (%)</label>
+                            <input type="number" id="documentationProgress" class="form-input" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Team Rating (1-5)</label>
+                        <div class="rating-display" id="ratingStars">
+                            <span class="star" onclick="setRating(1)">☆</span>
+                            <span class="star" onclick="setRating(2)">☆</span>
+                            <span class="star" onclick="setRating(3)">☆</span>
+                            <span class="star" onclick="setRating(4)">☆</span>
+                            <span class="star" onclick="setRating(5)">☆</span>
+                        </div>
+                        <input type="hidden" id="rating" value="0">
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="strengths" class="form-label">Strengths (one per line)</label>
+                            <textarea id="strengths" class="form-textarea" rows="3" placeholder="Enter strengths, one per line"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weaknesses" class="form-label">Areas for Improvement (one per line)</label>
+                            <textarea id="weaknesses" class="form-textarea" rows="3" placeholder="Enter areas for improvement, one per line"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="recommendations" class="form-label required">Recommendations</label>
+                        <textarea id="recommendations" class="form-textarea" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="nextMilestone" class="form-label">Next Milestone</label>
+                            <input type="text" id="nextMilestone" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nextMeetingDate" class="form-label">Next Meeting Date</label>
+                            <input type="date" id="nextMeetingDate" class="form-input">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeNewReportModal()" class="btn btn-outline">Cancel</button>
+                <button onclick="saveProgressReport()" class="btn btn-primary">Save Report</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">Regular progress monitoring helps teams stay on track</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/progress-monitoring.js"></script>
+</body>
+</html>

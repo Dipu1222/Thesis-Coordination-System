@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thesis Coordination System - Home</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M1200 120L0 16.48 0 0 1200 0 1200 120z" fill="%23ffffff" opacity=".03"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            padding: 3rem 0;
+            margin-top: -2rem;
+            position: relative;
+            z-index: 2;
+            border-radius: 10px 10px 0 0;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            color: #000000;
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        /* Features Section */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 3rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #000000;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--secondary);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: #000000;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* User Types */
+        .user-types {
+            background: var(--light);
+            padding: 5rem 0;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .user-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .user-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .user-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .user-description {
+            color: #000000;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            border-radius: 10px;
+            margin: 3rem auto;
+            max-width: 1200px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .cta-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .cta-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        .btn-white:hover {
+            background: var(--light-gray);
+            border-color: var(--light-gray);
+        }
+
+        /* Process Section */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .step-description {
+            color: #000000;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            padding: 0 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Login Options Dropdown */
+        .login-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .login-dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .login-dropdown-content a {
+            color: var(--primary);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .login-dropdown-content a:hover {
+            background: var(--light);
+        }
+
+        .login-dropdown:hover .login-dropdown-content {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid,
+            .user-grid,
+            .process-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .header-actions {
+                display: none;
+            }
+
+            .hero-section {
+                padding: 4rem 0;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .login-dropdown-content {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                width: 100%;
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-actions,
+            .cta-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid,
+            .user-grid,
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card,
+        .user-card,
+        .process-step {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--primary);
+                flex-direction: column;
+                padding: 1rem;
+                display: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .header-actions {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--primary);
+                padding: 1rem;
+                flex-direction: column;
+                display: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+
+            .header-actions.active {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">🏠 Home</a></li>
+                <li><a href="#features">✨ Features</a></li>
+                <li><a href="#about">👥 User Types</a></li>
+                <li><a href="#process">📋 How It Works</a></li>
+                <li><a href="#contact">📞 Contact</a></li>
+            </ul>
+            
+            <div class="header-actions">
+                <div class="login-dropdown">
+                    <button class="btn btn-outline" style="display: flex; align-items: center; gap: 0.5rem;">
+                        🔑 Login
+                        <span style="font-size: 0.8rem;">▼</span>
+                    </button>
+                    <div class="login-dropdown-content">
+                        <a href="student/login.html">👨‍🎓 Student Login</a>
+                        <a href="supervisor/login.html">👨‍🏫 Supervisor Login</a>
+                        <a href="admin/login.html">👨‍💼 Admin Login</a>
+                        <a href="board/login.html">👥 Board Member Login</a>
+                    </div>
+                </div>
+                
+                <div class="login-dropdown">
+                    <button class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem;">
+                        📝 Register
+                        <span style="font-size: 0.8rem;">▼</span>
+                    </button>
+                    <div class="login-dropdown-content">
+                        <a href="student/register.html">👨‍🎓 Student Register</a>
+                        <a href="supervisor/register.html">👨‍🏫 Supervisor Register</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Thesis Coordination System</h1>
+                <p class="hero-subtitle">
+                    Streamline your thesis journey with our comprehensive platform for students, supervisors, and administrators. 
+                    Manage teams, submissions, defenses, and communication all in one place.
+                </p>
+                <div class="hero-actions">
+                    <a href="#register-options" class="btn btn-primary">Get Started</a>
+                    <a href="#features" class="btn btn-outline">Learn More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Expert Supervisors</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">300+</div>
+                    <div class="stat-label">Completed Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support Available</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">Key Features</h2>
+                <p class="section-subtitle">Everything you need for a successful thesis journey in one platform</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">👥</div>
+                        <h3 class="feature-title">Team Formation</h3>
+                        <p class="feature-description">
+                            Easily find and form teams with your classmates. Send requests, manage team members, and collaborate effectively.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3 class="feature-title">Supervisor Assignment</h3>
+                        <p class="feature-description">
+                            Browse available supervisors, check their research areas, and send requests. Get assigned to the best match for your project.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📄</div>
+                        <h3 class="feature-title">Document Management</h3>
+                        <p class="feature-description">
+                            Upload proposals, reports, and presentations. Track submission status and receive feedback directly on the platform.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h3 class="feature-title">Real-time Chat</h3>
+                        <p class="feature-description">
+                            Communicate with team members and supervisors through integrated chat. Stay connected throughout your thesis journey.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3 class="feature-title">Defense Scheduling</h3>
+                        <p class="feature-description">
+                            View defense schedules, venues, and panel members. Get notifications for upcoming defenses and results.
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3 class="feature-title">Progress Tracking</h3>
+                        <p class="feature-description">
+                            Monitor your project progress, deadlines, and supervisor feedback. Stay on track with your thesis timeline.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Types Section -->
+        <section id="about" class="user-types">
+            <div class="container">
+                <h2 class="section-title">Platform for Everyone</h2>
+                <p class="section-subtitle">Designed to support all stakeholders in the thesis process</p>
+                
+                <div class="user-grid">
+                    <div class="user-card">
+                        <div class="user-icon">👨‍🎓</div>
+                        <h3 class="user-title">Students</h3>
+                        <p class="user-description">
+                            Form teams, select supervisors, submit documents, track progress, and communicate with your team and supervisor.
+                        </p>
+                        <a href="student/register.html" class="btn btn-primary">Register as Student</a>
+                    </div>
+                    
+                    <div class="user-card">
+                        <div class="user-icon">👨‍🏫</div>
+                        <h3 class="user-title">Supervisors</h3>
+                        <p class="user-description">
+                            Review team requests, evaluate submissions, provide feedback, monitor progress, and participate in defenses.
+                        </p>
+                        <a href="supervisor/register.html" class="btn btn-outline" style="border-color: var(--secondary); color: var(--secondary);">Register as Supervisor</a>
+                    </div>
+                    
+                    <div class="user-card">
+                        <div class="user-icon">👨‍💼</div>
+                        <h3 class="user-title">Administrators</h3>
+                        <p class="user-description">
+                            Manage users, schedule defenses, monitor system activity, generate reports, and configure system settings.
+                        </p>
+                        <a href="admin/login.html" class="btn btn-outline" style="border-color: var(--secondary); color: var(--secondary);">Admin Login</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Registration Options -->
+        <section id="register-options" class="section" style="background: var(--light);">
+            <div class="container">
+                <h2 class="section-title">Get Started Today</h2>
+                <p class="section-subtitle">Choose your role and join our platform</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍🎓</div>
+                        <h3 class="feature-title">Student Portal</h3>
+                        <p class="feature-description">
+                            Register as a student to start your thesis journey. Form teams, submit documents, and track your progress.
+                        </p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="student/register.html" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Register as Student</a>
+                            <a href="student/login.html" class="btn btn-outline" style="width: 100%; border-color: var(--secondary); color: var(--secondary);">Student Login</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍🏫</div>
+                        <h3 class="feature-title">Supervisor Portal</h3>
+                        <p class="feature-description">
+                            Register as a supervisor to guide student projects. Review submissions, provide feedback, and evaluate defenses.
+                        </p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="supervisor/register.html" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Register as Supervisor</a>
+                            <a href="supervisor/login.html" class="btn btn-outline" style="width: 100%; border-color: var(--secondary); color: var(--secondary);">Supervisor Login</a>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">👨‍💼</div>
+                        <h3 class="feature-title">Admin Portal</h3>
+                        <p class="feature-description">
+                            Access the admin panel to manage the entire system. Configure settings, schedule defenses, and generate reports.
+                        </p>
+                        <div style="margin-top: 1.5rem;">
+                            <a href="admin/login.html" class="btn btn-primary" style="width: 100%;">Admin Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <div class="container">
+            <section class="cta-section">
+                <h2 class="cta-title">Ready to Start Your Thesis Journey?</h2>
+                <p class="cta-description">
+                    Join thousands of students who have successfully completed their thesis using our platform.
+                </p>
+                <div class="cta-actions">
+                    <a href="#register-options" class="btn btn-white">Get Started Now</a>
+                    <div class="login-dropdown">
+                        <button class="btn btn-outline" style="display: flex; align-items: center; gap: 0.5rem;">
+                            🔑 Login to Account
+                            <span style="font-size: 0.8rem;">▼</span>
+                        </button>
+                        <div class="login-dropdown-content">
+                            <a href="student/login.html">👨‍🎓 Student Login</a>
+                            <a href="supervisor/login.html">👨‍🏫 Supervisor Login</a>
+                            <a href="admin/login.html">👨‍💼 Admin Login</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Process Section -->
+        <section id="process" class="section">
+            <div class="container">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">Simple steps to complete your thesis successfully</p>
+                
+                <div class="process-grid">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Register Account</h3>
+                        <p class="step-description">
+                            Create your account with academic information and personal details.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Form Your Team</h3>
+                        <p class="step-description">
+                            Find classmates and form a research team (maximum 3 members per team).
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Get Supervisor</h3>
+                        <p class="step-description">
+                            Request and get assigned to a supervisor based on research interests.
+                        </p>
+                    </div>
+                    
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">Complete Thesis</h3>
+                        <p class="step-description">
+                            Submit documents, defend your work, and receive final results and feedback.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section" style="background: var(--light);">
+            <div class="container">
+                <h2 class="section-title">Need Help?</h2>
+                <p class="section-subtitle">Our support team is here to assist you</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📧</div>
+                        <h3 class="feature-title">Email Support</h3>
+                        <p class="feature-description">
+                            Send us an email for any queries or issues.
+                        </p>
+                        <p style="margin-top: 1rem;">
+                            <strong>Email:</strong> support@thesiscoord.edu
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📞</div>
+                        <h3 class="feature-title">Phone Support</h3>
+                        <p class="feature-description">
+                            Call us during working hours for immediate assistance.
+                        </p>
+                        <p style="margin-top: 1rem;">
+                            <strong>Phone:</strong> +880 1234 567890
+                        </p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🏢</div>
+                        <h3 class="feature-title">Visit Us</h3>
+                        <p class="feature-description">
+                            Visit our office for in-person support and guidance.
+                        </p>
+                        <p style="margin-top: 1rem;">
+                            <strong>Address:</strong><br>
+                            Department of CSE,<br>
+                            University Campus
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ThesisCoord</h3>
+                <p>Streamlining thesis coordination for academic institutions since 2024.</p>
+                <p>Department of Computer Science & Engineering</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">User Types</a></li>
+                    <li><a href="#process">How It Works</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Portal Access</h3>
+                <ul class="footer-links">
+                    <li><a href="student/login.html">Student Portal</a></li>
+                    <li><a href="supervisor/login.html">Supervisor Portal</a></li>
+                    <li><a href="admin/login.html">Admin Portal</a></li>
+                    <li><a href="board/login.html">Board Portal</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p>Email: support@thesiscoord.edu</p>
+                <p>Phone: +880 1234 567890</p>
+                <p>Address: Department of CSE, University Campus</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 Thesis Coordination System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const headerActions = document.querySelector('.header-actions');
+            
+            navLinks.classList.toggle('active');
+            headerActions.classList.toggle('active');
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('.nav-links').classList.remove('active');
+                        document.querySelector('.header-actions').classList.remove('active');
+                    }
+                }
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.login-dropdown');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target)) {
+                    dropdown.querySelector('.login-dropdown-content').style.display = 'none';
+                }
+            });
+        });
+
+        // Show dropdown on hover (desktop) and click (mobile)
+        document.querySelectorAll('.login-dropdown').forEach(dropdown => {
+            const content = dropdown.querySelector('.login-dropdown-content');
+            const button = dropdown.querySelector('button');
+            
+            // Desktop hover
+            dropdown.addEventListener('mouseenter', () => {
+                if (window.innerWidth > 768) {
+                    content.style.display = 'block';
+                }
+            });
+            
+            dropdown.addEventListener('mouseleave', () => {
+                if (window.innerWidth > 768) {
+                    content.style.display = 'none';
+                }
+            });
+            
+            // Mobile click
+            button.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.stopPropagation();
+                    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

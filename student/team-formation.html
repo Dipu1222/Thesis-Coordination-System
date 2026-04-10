@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Formation - Thesis Coordination System</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --primary-dark: #1a252f;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #f8f9fa;
+            --light-gray: #ecf0f1;
+            --medium-gray: #bdc3c7;
+            --dark-gray: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --border: #dfe6e9;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: var(--primary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav.container {
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: white;
+            margin-right: 3rem;
+        }
+
+        .logo span {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.2rem;
+            flex: 1;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: white;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin-left: auto;
+        }
+
+        /* Main Content */
+        main.container {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            margin: 2rem 0;
+        }
+
+        .tab-header {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            bottom: -1px;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+        }
+
+        .tab-button.active {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Current Team Section */
+        .team-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .team-code {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 1rem 0;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .invite-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Student Cards */
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .student-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .student-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--secondary);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .student-name {
+    font-weight: 600;
+    color: #000000;  /* ← Changed to black */
+    font-size: 1rem;
+}
+
+.student-id {
+    color: #000000;  /* ← Changed to black */
+    font-size: 0.85rem;
+    font-family: 'Courier New', monospace;
+    opacity: 0.85;   /* ← Optional: add opacity for better readability */
+}
+
+.student-details {
+    font-size: 0.9rem;
+    color: #000000;  /* ← Changed to black */
+    margin-bottom: 1rem;
+    opacity: 0.85;   /* ← Optional: add opacity for better readability */
+}
+
+        .student-details p {
+            margin: 0.25rem 0;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-accepted {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success);
+        }
+
+        .badge-rejected {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+
+        /* Team Members */
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .member-card {
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+
+        .member-role {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: 1px solid transparent;
+            line-height: 1;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark-gray);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+            border-color: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            line-height: 1;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            color: var(--medium-gray);
+            font-style: italic;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--dark-gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav.container {
+                padding: 0 1rem;
+                height: 60px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            main.container {
+                padding: 1.5rem;
+            }
+
+            .invite-form {
+                flex-direction: column;
+            }
+
+            .member-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 95%;
+            }
+
+            .tab-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Thesis<span>Coord</span></div>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="team-formation.html" class="active">Team Formation</a></li>
+                <li><a href="supervisor-selection.html">Supervisors</a></li>
+                <li><a href="annex-form.html">Annex Form</a></li>
+                <li><a href="document-upload.html">Documents</a></li>
+                <li><a href="chat.html">Chat</a></li>
+                <li><a href="defense-schedule.html">Defense</a></li>
+                <li><a href="results.html">Results</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- Filled by JavaScript -->
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Team Formation</h1>
+            <div class="page-subtitle">Form and manage your thesis team</div>
+        </div>
+        
+        <!-- Current Team Section -->
+        <div id="currentTeamSection" style="display: none;">
+            <div class="team-banner">
+                <h3>Your Team</h3>
+                <p>Share this code with classmates to invite them</p>
+                <div class="team-code" id="teamCodeDisplay">Loading...</div>
+                
+                <div class="invite-form">
+                    <input type="text" id="inviteCodeInput" class="form-input" placeholder="Enter student ID">
+                    <button onclick="inviteByCode()" class="btn btn-primary">Invite</button>
+                </div>
+            </div>
+            
+            <!-- Team Members -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Team Members</div>
+                    <button onclick="leaveTeam()" class="btn btn-danger">Leave Team</button>
+                </div>
+                <div class="card-content">
+                    <div class="member-grid" id="teamMembersList">
+                        <!-- Team members will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pending Invitations -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Pending Invitations</div>
+                </div>
+                <div class="card-content" id="pendingInvitations">
+                    <!-- Pending invitations will be shown here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Team Formation Tabs -->
+        <div class="tabs">
+            <div class="tab-header">
+                <button class="tab-button active" onclick="showTab('search')">Find Students</button>
+                <button class="tab-button" onclick="showTab('requests')">Team Requests</button>
+                <button class="tab-button" onclick="showTab('guidelines')">Guidelines</button>
+            </div>
+            
+            <!-- Search Tab -->
+            <div class="tab-content active" id="searchTab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Search for Teammates</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label class="form-label">Search by name or ID</label>
+                                <input type="text" id="searchInput" class="form-input" 
+                                       placeholder="Enter search term" onkeyup="searchStudents()">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Filter by department</label>
+                                <select id="departmentFilter" class="form-select" onchange="searchStudents()">
+                                    <option value="">All Departments</option>
+                                    <option value="CSE">Computer Science & Engineering</option>
+                                    <option value="EEE">Electrical & Electronic Engineering</option>
+                                    <option value="CE">Civil Engineering</option>
+                                    <option value="ME">Mechanical Engineering</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Available Students</div>
+                        <div class="page-subtitle">Showing students without teams</div>
+                    </div>
+                    <div class="card-content">
+                        <div id="studentsContainer" class="loading">
+                            Loading students...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Requests Tab -->
+            <div class="tab-content" id="requestsTab">
+                <div class="grid-2">
+                    <!-- Incoming Requests -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Incoming Requests</div>
+                        </div>
+                        <div class="card-content" id="incomingRequests">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📥</div>
+                                <p>No incoming requests</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Outgoing Requests -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Your Requests</div>
+                        </div>
+                        <div class="card-content" id="outgoingRequests">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📤</div>
+                                <p>No outgoing requests</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Guidelines Tab -->
+            <div class="tab-content" id="guidelinesTab">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Team Formation Guidelines</div>
+                    </div>
+                    <div class="card-content">
+                        <div class="grid-2">
+                            <div>
+                                <h4>Team Rules</h4>
+                                <ul style="list-style: none; padding-left: 1rem;">
+                                    <li style="margin-bottom: 0.5rem;">• Maximum team size: 3 students</li>
+                                    <li style="margin-bottom: 0.5rem;">• All members must be from same department</li>
+                                    <li style="margin-bottom: 0.5rem;">• Team leader responsible for submissions</li>
+                                    <li style="margin-bottom: 0.5rem;">• Formation must complete before supervisor selection</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <h4>Formation Process</h4>
+                                <ol style="padding-left: 1.5rem;">
+                                    <li style="margin-bottom: 0.5rem;">Find classmates using search</li>
+                                    <li style="margin-bottom: 0.5rem;">Send team requests to members</li>
+                                    <li style="margin-bottom: 0.5rem;">Wait for acceptance</li>
+                                    <li style="margin-bottom: 0.5rem;">Select supervisor after formation</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                            <h4>Important Notes</h4>
+                            <ul style="list-style: none; padding-left: 1rem;">
+                                <li style="margin-bottom: 0.5rem;">• Only one team per student</li>
+                                <li style="margin-bottom: 0.5rem;">• Team leader cannot be changed</li>
+                                <li style="margin-bottom: 0.5rem;">• Team disbanded if leader leaves</li>
+                                <li style="margin-bottom: 0.5rem;">• Finalize within first 2 weeks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Create Team Modal -->
+        <div id="createTeamModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Create New Team</div>
+                    <button onclick="closeModal()" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Team Name</label>
+                        <input type="text" id="teamName" class="form-input" placeholder="Enter team name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Team Description (Optional)</label>
+                        <textarea id="teamDescription" class="form-textarea" placeholder="Brief description of your team"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    <button onclick="createTeam()" class="btn btn-primary">Create Team</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Request Modal -->
+        <div id="requestModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="requestModalTitle">Send Team Request</div>
+                    <button onclick="closeModal()" class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Message to Student</label>
+                        <textarea id="requestMessage" class="form-textarea" placeholder="Add a personal message (optional)"></textarea>
+                    </div>
+                    <p id="requestStudentInfo" style="margin-top: 1rem; padding: 1rem; background: var(--light); border-radius: 6px;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="closeModal()" class="btn btn-secondary">Cancel</button>
+                    <button onclick="sendTeamRequest()" class="btn btn-primary">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p class="footer-text">Thesis Coordination System © 2024</p>
+            <p class="footer-text">For team formation issues, contact: teams@thesiscoord.edu</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/team.js"></script>
+</body>
+</html>
