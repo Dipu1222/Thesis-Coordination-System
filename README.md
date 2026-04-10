@@ -42,3 +42,4 @@ The project includes (but is not limited to):
 ### 🔐 Login Modal
 <img width="1919" height="998" alt="Screenshot 2026-04-10 154646" src="https://github.com/user-attachments/assets/9c590e5a-f661-4aab-8d69-1829873b1127" />
 
+### c
